@@ -139,7 +139,7 @@ class Chain_Communicator:
             app.logger.debug("Removing existing mode job")
             sched.unschedule_job(job)
         self.mode_jobs = []
-        if (self.state == 'autonomous' && p):
+        if self.state == 'autonomous':
             p.kill()
 
     def resume_auto(self):
