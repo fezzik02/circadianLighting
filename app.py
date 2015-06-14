@@ -139,13 +139,15 @@ class Chain_Communicator:
             app.logger.debug("Removing existing mode job")
             sched.unschedule_job(job)
         self.mode_jobs = []
-        if self.state == 'autonomous':
+        if self.state is 'autonomous':
             p.kill()
 
     def resume_auto(self):
         if self.state is not 'manual':
             self.clear_mode()
          # returns system state to autonomous, to be triggered via the scheduler, or via a request hook from the web ui.
+        if self.state is 'autonomous':
+            p.kill()
 
         self.state = 'autonomous'
         app.logger.debug("Resume auto called, system state is now : %s" % self.state)
