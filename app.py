@@ -19,10 +19,7 @@ from flask import Flask, request, session, url_for, redirect, render_template, a
 from sys import exit
 
 from apscheduler.scheduler import Scheduler
-app.logger.info("Trying to engage 4000Day mode.")
-command_line = 'python ../pixelpi/pixelpi.py strip --chip LPD6803 --array_height 50 --filename ../pixelpi/4000day.gif --refresh_rate 100'
-args = shlex.split(command_line)
-p = subprocess.Popen(args)
+
 SECRET_KEY = 'nkjfsnkgbkfnge347r28fherg8fskgsd2r3fjkenwkg33f3s'
 CONFIGURATION_PATH = "/etc/circadian.conf"
 
@@ -34,7 +31,10 @@ auto_resume_job = None
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.debug = True # !!! Set this to False for production use !!!
-
+app.logger.info("Trying to engage 4000Day mode.")
+command_line = 'python ../pixelpi/pixelpi.py strip --chip LPD6803 --array_height 50 --filename ../pixelpi/4000day.gif --refresh_rate 100'
+args = shlex.split(command_line)
+p = subprocess.Popen(args)
 time_format = "%H:%M:%S"
 # Event times should be in the form of %H:%M:%S
 # Event states should be in the form of [Red,Green,Blue]
