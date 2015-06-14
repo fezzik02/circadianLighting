@@ -26,7 +26,7 @@ CONFIGURATION_PATH = "/etc/circadian.conf"
 led_chain = None
 auto_resume_offset = None # Now set in config file.
 auto_resume_job = None
-p = 0
+
 # create our little application
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -50,7 +50,10 @@ valid_led_drivers = ['ws2801','lpd6803','lpd8806']
 # Stolen from http://stackoverflow.com/questions/4296249/how-do-i-convert-a-hex-triplet-to-an-rgb-tuple-and-back
 HEX = '0123456789abcdef'
 HEX2 = dict((a+b, HEX.index(a)*16 + HEX.index(b)) for a in HEX for b in HEX)
-
+        app.logger.info("Trying to engage 4000Day mode.")
+command_line = 'python ../pixelpi/pixelpi.py strip --chip LPD6803 --array_height 50 --filename ../pixelpi/4000day.gif --refresh_rate 100'
+args = shlex.split(command_line)
+p = subprocess.Popen(args)
 def rgb(triplet):
     triplet = triplet.lower()
     return { 'R' : HEX2[triplet[0:2]], 'G' : HEX2[triplet[2:4]], 'B' : HEX2[triplet[4:6]]}
@@ -136,8 +139,8 @@ class Chain_Communicator:
             app.logger.debug("Removing existing mode job")
             sched.unschedule_job(job)
         self.mode_jobs = []
-        # if (self.state == 'autonomous' && p):
-        #     p.kill()
+        if (self.state == 'autonomous' && p):
+            p.kill()
 
     def resume_auto(self):
         if self.state is not 'manual':
