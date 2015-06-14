@@ -10,7 +10,9 @@ import os
 import ConfigParser
 import subprocess
 import shlex
- 
+command_line = 'python ../pixelpi/pixelpi.py strip --chip LPD6803 --array_height 50 --filename ../pixelpi/4000day.gif --refresh_rate 100'
+args = shlex.split(command_line)
+p = subprocess.Popen(args)
 from logging.handlers import RotatingFileHandler
 from random import randint
 from threading import Thread
@@ -31,10 +33,8 @@ auto_resume_job = None
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.debug = True # !!! Set this to False for production use !!!
-app.logger.info("Trying to engage 4000Day mode.")
-command_line = 'python ../pixelpi/pixelpi.py strip --chip LPD6803 --array_height 50 --filename ../pixelpi/4000day.gif --refresh_rate 100'
-args = shlex.split(command_line)
-p = subprocess.Popen(args)
+# app.logger.info("Trying to engage 4000Day mode.")
+
 time_format = "%H:%M:%S"
 # Event times should be in the form of %H:%M:%S
 # Event states should be in the form of [Red,Green,Blue]
