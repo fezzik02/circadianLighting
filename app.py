@@ -147,7 +147,7 @@ class Chain_Communicator:
             self.clear_mode()
          # returns system state to autonomous, to be triggered via the scheduler, or via a request hook from the web ui.
         if self.state is 'autonomous':
-            p.kill()
+            self.p.kill()
 
         self.state = 'autonomous'
         app.logger.debug("Resume auto called, system state is now : %s" % self.state)
