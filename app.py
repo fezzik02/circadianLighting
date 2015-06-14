@@ -8,6 +8,8 @@ import Queue
 import argparse
 import os 
 import ConfigParser
+import subprocess
+import shlex
  
 from logging.handlers import RotatingFileHandler
 from random import randint
@@ -24,7 +26,7 @@ CONFIGURATION_PATH = "/etc/circadian.conf"
 led_chain = None
 auto_resume_offset = None # Now set in config file.
 auto_resume_job = None
-
+p = 0
 # create our little application
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -134,6 +136,8 @@ class Chain_Communicator:
             app.logger.debug("Removing existing mode job")
             sched.unschedule_job(job)
         self.mode_jobs = []
+        if self.state == 'autonomous'
+            p.kill()
 
     def resume_auto(self):
         if self.state is not 'manual':
@@ -143,15 +147,10 @@ class Chain_Communicator:
         self.state = 'autonomous'
         app.logger.debug("Resume auto called, system state is now : %s" % self.state)
 
-        app.logger.info("Looking to see if current time falls within any events.")
-        current_time = datetime.time(datetime.now())
-        for event in auto_state_events:
-            start_time = datetime.time(datetime.strptime(event['event_start_time'],time_format))
-            end_time = datetime.time(datetime.strptime(event['event_end_time'],time_format))
-            if current_time > start_time and current_time < end_time:
-                app.logger.info("Event : '%s' falls within the current time, executing state." % event['event_name'])
-                self.auto_transition(state=event['event_state'])
-                break
+        app.logger.info("Trying to engage 4000Day mode.")
+        command_line = 'python ../pixelpi/pixelpi.py strip --chip LPD6803 --array_height 50 --filename ../pixelpi/4000day.gif --refresh_rate 100'
+        args = shlex.split(command_line)
+        p = subprocess.Popen(args)
 
     def shutdown(self):
         self.run = False
